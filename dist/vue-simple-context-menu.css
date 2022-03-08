@@ -15,6 +15,7 @@
 }
 .vue-simple-context-menu--active {
   display: block;
+  position: fixed;
 }
 .vue-simple-context-menu__item {
   display: flex;

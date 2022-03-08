@@ -14,13 +14,21 @@ var script = {
     options: {
       type: Array,
       required: true
+    },
+    overrideLeft: {
+      type: Number
+    },
+    overrideTop: {
+      type: Number
     }
   },
   data: function data() {
     return {
       item: null,
       menuWidth: null,
-      menuHeight: null
+      menuHeight: null,
+      realLeft: null,
+      realTop: null
     };
   },
   methods: {
@@ -35,22 +43,31 @@ var script = {
       if (!this.menuWidth || !this.menuHeight) {
         menu.style.visibility = "hidden";
         menu.style.display = "block";
+        // menu.style.position = "fixed";
         this.menuWidth = menu.offsetWidth;
         this.menuHeight = menu.offsetHeight;
         menu.removeAttribute("style");
       }
-
-      if (this.menuWidth + event.pageX >= window.innerWidth) {
-        menu.style.left = event.pageX - this.menuWidth + 2 + "px";
-      } else {
-        menu.style.left = event.pageX - 2 + "px";
+      if (!this.realLeft && this.realLeft !== 0){
+        if (this.menuWidth + event.pageX >= window.innerWidth) {
+          menu.style.left = event.pageX - this.menuWidth + 2 + "px";
+        } else {
+          menu.style.left = event.pageX - 2 + "px";
+        }
+      }else {
+        menu.style.left = this.realLeft + "px";
+      }
+      if (!this.realTop && this.realTop !== 0){
+        if (this.menuHeight + event.pageY >= window.innerHeight) {
+          menu.style.top = event.pageY - this.menuHeight + 2 + "px";
+        } else {
+          menu.style.top = event.pageY - 2 + "px";
+        }
+      }else {
+        menu.style.top = this.realTop + "px";
       }
 
-      if (this.menuHeight + event.pageY >= window.innerHeight) {
-        menu.style.top = event.pageY - this.menuHeight + 2 + "px";
-      } else {
-        menu.style.top = event.pageY - 2 + "px";
-      }
+      
 
       menu.classList.add("vue-simple-context-menu--active");
     },
@@ -82,6 +99,14 @@ var script = {
   },
   beforeDestroy: function beforeDestroy() {
     document.removeEventListener("keyup", this.onEscKeyRelease);
+  },
+  watch:{
+    overrideLeft: function overrideLeft(){
+      this.realLeft = this.overrideLeft;
+    },
+    overrideLeft: function overrideLeft(){
+      this.realTop = this.overrideTop;
+    },
   }
 };
 
@@ -163,7 +188,7 @@ function normalizeComponent(template, style, script, scopeId, isFunctionalTempla
 /* script */
 var __vue_script__ = script;
 /* template */
-var __vue_render__ = function() {
+var __vue_render__ = function () {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
@@ -176,13 +201,12 @@ var __vue_render__ = function() {
             name: "click-outside",
             rawName: "v-click-outside",
             value: _vm.onClickOutside,
-            expression: "onClickOutside"
-          }
-        ],
+            expression: "onClickOutside",
+          } ],
         staticClass: "vue-simple-context-menu",
-        attrs: { id: _vm.elementId }
+        attrs: { id: _vm.elementId },
       },
-      _vm._l(_vm.options, function(option, index) {
+      _vm._l(_vm.options, function (option, index) {
         return _c(
           "li",
           {
@@ -192,21 +216,19 @@ var __vue_render__ = function() {
               option.class,
               option.type === "divider"
                 ? "vue-simple-context-menu__divider"
-                : ""
-            ],
+                : "" ],
             on: {
-              click: function($event) {
+              click: function ($event) {
                 $event.stopPropagation();
                 return _vm.optionClicked(option)
-              }
-            }
+              },
+            },
           },
           [_c("span", { domProps: { innerHTML: _vm._s(option.name) } })]
         )
       }),
       0
-    )
-  ])
+    ) ])
 };
 var __vue_staticRenderFns__ = [];
 __vue_render__._withStripped = true;

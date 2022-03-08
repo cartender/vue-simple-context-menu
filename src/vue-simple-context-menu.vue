@@ -48,7 +48,9 @@ export default {
     return {
       item: null,
       menuWidth: null,
-      menuHeight: null
+      menuHeight: null,
+      realLeft: null,
+      realTop: null
     };
   },
   methods: {
@@ -68,23 +70,23 @@ export default {
         this.menuHeight = menu.offsetHeight;
         menu.removeAttribute("style");
       }
-      if (!this.overrideLeft && this.overrideLeft !== 0){
+      if (!this.realLeft && this.realLeft !== 0){
         if (this.menuWidth + event.pageX >= window.innerWidth) {
           menu.style.left = event.pageX - this.menuWidth + 2 + "px";
         } else {
           menu.style.left = event.pageX - 2 + "px";
         }
       }else{
-        menu.style.left = this.overrideLeft + "px";
+        menu.style.left = this.realLeft + "px";
       }
-      if (!this.overrideTop && this.overrideTop !== 0){
+      if (!this.realTop && this.realTop !== 0){
         if (this.menuHeight + event.pageY >= window.innerHeight) {
           menu.style.top = event.pageY - this.menuHeight + 2 + "px";
         } else {
           menu.style.top = event.pageY - 2 + "px";
         }
       }else{
-        menu.style.top = this.overrideTop + "px";
+        menu.style.top = this.realTop + "px";
       }
 
       
@@ -119,6 +121,14 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener("keyup", this.onEscKeyRelease);
+  },
+  watch:{
+    overrideLeft(){
+      this.realLeft = this.overrideLeft;
+    },
+    overrideLeft(){
+      this.realTop = this.overrideTop;
+    },
   }
 };
 </script>
